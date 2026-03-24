@@ -369,3 +369,5 @@ export default function App() {
     </div>
   )
 }
+
+export { formatSlotRange, doctorFullName }
