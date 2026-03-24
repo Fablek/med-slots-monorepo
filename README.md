@@ -1,4 +1,4 @@
-# 🏥 Telemedi Smart Booking — Recruitment Task
+# 🏥 Telemedi Smart Booking
 
 An elegant, secure, and efficient medical appointment booking system built in a monorepo architecture. The project focuses on **data integrity** and a modern **User Experience**.
 
@@ -70,7 +70,3 @@ To verify the application's stability, run:
 * **backend/** — API source code (Symfony 8).
 * **frontend/** — UI source code (React).
 * **docker-compose.yml** — Full environment orchestration.
-
----
-
-**Status:** Ready for review. Dr. House would approve of this code. 😉 🚑🦾
