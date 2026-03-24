@@ -11,6 +11,7 @@ import {
 } from 'lucide-react'
 import { getErrorMessage } from './api/errorMessage'
 import { useAvailableSlotsQuery, useDoctorsQuery } from './hooks/useBookingQueries'
+import { BookingModal } from './components/BookingModal'
 import type { Doctor } from './types/api'
 
 type Step = 1 | 2
@@ -43,6 +44,8 @@ export default function App() {
   const prefersReducedMotion = useReducedMotion()
   const [step, setStep] = useState<Step>(1)
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null)
+  const [selectedSlotId, setSelectedSlotId] = useState<string | null>(null)
+  const [selectedSlotTime, setSelectedSlotTime] = useState<string | null>(null)
 
   const stepTransition = prefersReducedMotion
     ? { duration: 0 }
@@ -62,6 +65,16 @@ export default function App() {
   const goBackToList = () => {
     setStep(1)
     setSelectedDoctor(null)
+  }
+
+  const handleSlotClick = (slotId: string, startTime: string, endTime: string) => {
+    setSelectedSlotId(slotId)
+    setSelectedSlotTime(formatSlotRange(startTime, endTime).time)
+  }
+
+  const closeModal = () => {
+    setSelectedSlotId(null)
+    setSelectedSlotTime(null)
   }
 
   return (
@@ -291,10 +304,13 @@ export default function App() {
                 {slotsQuery.isSuccess && slotsQuery.data.length > 0 && (
                   <ul className="grid grid-cols-3 gap-2.5 sm:grid-cols-4 md:grid-cols-6 md:gap-3">
                     {slotsQuery.data.map((slot, i) => {
+                      // Wyciągamy poprawne ID (standard API Platform to @id, fallback to id)
+                      const currentId = slot['@id'] || slot.id;
                       const { date, time } = formatSlotRange(slot.startTime, slot.endTime)
+                      
                       return (
                         <motion.li
-                          key={slot.id}
+                          key={currentId}
                           initial={{
                             opacity: 0,
                             scale: prefersReducedMotion ? 1 : 0.94,
@@ -308,6 +324,7 @@ export default function App() {
                         >
                           <motion.button
                             type="button"
+                            onClick={() => handleSlotClick(currentId, slot.startTime, slot.endTime)}
                             className="group relative w-full overflow-hidden rounded-full border border-slate-200/90 bg-white px-3 py-3 text-left shadow-sm transition-colors hover:border-sky-300 hover:bg-gradient-to-br hover:from-sky-50 hover:to-white focus-visible:outline focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 sm:px-4"
                             whileHover={
                               prefersReducedMotion
@@ -340,6 +357,13 @@ export default function App() {
               </div>
             </motion.section>
           )}
+
+          <BookingModal
+            isOpen={Boolean(selectedSlotId && selectedSlotTime)}
+            slotId={selectedSlotId!}
+            slotTime={selectedSlotTime!}
+            onClose={closeModal}
+          />
         </AnimatePresence>
       </div>
     </div>
