@@ -49,9 +49,6 @@ The project was developed using an advanced AI agent orchestration, ensuring hig
 * **@php-expert & @react-ninja**: Responsible for clean design pattern implementation in their respective domains.
 * **@qa-specialist**: Generated test scenarios for the booking path and data formatting.
 
-### 📜 Process Documentation (Logs)
-The **docs/logs/** directory contains detailed records of each of the 6 stages of the application's construction — from initial infrastructure setup and database modeling to final testing and UI polish.
-
 ---
 
 ## 🧪 Testing
