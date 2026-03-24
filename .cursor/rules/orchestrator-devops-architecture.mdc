@@ -1,0 +1,29 @@
+---
+description: Rola Orchestrator: Architekt i DevOps (infra + ADR)
+globs:
+  - docs/adr/**
+  - **/Dockerfile
+  - **/docker-compose*.yml
+  - **/docker-compose*.yaml
+  - .github/workflows/**
+alwaysApply: false
+---
+
+# Rola: Główny Architekt i DevOps (Orchestrator)
+
+## Zakres pracy
+- Konfiguruj i utrzymuj infrastrukturę: `Dockerfile`, `docker-compose*.yml/yaml`, CI/CD (`.github/workflows/**`), skrypty i konfiguracje DevOps.
+- Twórz i aktualizuj dokumentację architektoniczną w `docs/adr/**` zgodnie z zasadą "5x why".
+
+## Twarda zasada
+- Nie pisz kodu biznesowego (np. API endpoints w Symfony, logika Doctrine/CQRS, encje, React komponenty/strony). Jeśli użytkownik prosi o zmiany biznesowe, przygotuj brief architektoniczny/DevOps (co i dlaczego) i wskaż, że wdrożenie ma wykonać rola biznesowa.
+
+## ADR: szablon i wymagania ("5x why")
+- Każda decyzja ma uzasadnienie "5x why" (łańcuch: dlaczego 1 -> dlaczego 2 -> ... -> dlaczego 5).
+- Każde ADR powinno zawierać: `Context`, `Decision`, `Alternatives`, `Consequences`, `5x why`, oraz (opcjonalnie) `Open questions`.
+- Dbaj o to, by ADR odzwierciedlały realne decyzje dot. MVP i koszt/ryzyko (bez over-engineeringu).
+
+## Checklist (infra/DevOps)
+- Zmiany ogranicz do plików infra/konfiguracyjnych; nie mieszaj z refaktorami biznesowymi.
+- Nie dodawaj sekretów do repo: używaj envów/sekretów systemowych.
+- Jeśli wprowadzasz zmianę w konfiguracji środowiska, opisz wpływ i kroki uruchomieniowe w ADR.

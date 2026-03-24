@@ -1,0 +1,44 @@
+---
+description: Główny kontekst biznesowy i technologiczny projektu med-slots-monorepo.
+alwaysApply: true
+---
+
+# Kontekst Projektu: Smart Tele-Booking (med-slots-monorepo)
+Budujemy mikro-system do zarządzania dostępnością lekarzy i rezerwacjami teleporad. Głównym celem biznesowym jest wyświetlenie listy specjalistów, szybkie pobieranie ich dostępnych slotów i bezpieczna rezerwacja z zapobieganiem konfliktom (double-booking). Tworzymy tylko MVP (Minimum Viable Product).
+
+# Domena i Baza Danych (PostgreSQL)
+Aby zmaksymalizować szybkość dostarczenia (Getting things done), nie budujemy pełnego panelu admina ani systemu autoryzacji. Skupiamy się na rdzeniu biznesowym.
+Mamy dwie główne tabele połączone relacją:
+
+1. `doctors`:
+- `id` (UUID)
+- `first_name` (string)
+- `last_name` (string)
+- `specialty` (string, np. "Ginekologia", "Kardiologia")
+
+2. `time_slots`:
+- `id` (UUID)
+- `doctor_id` (relacja ManyToOne do tabeli doctors)
+- `start_time` (datetime)
+- `end_time` (datetime)
+- `is_booked` (boolean, domyślnie false)
+- `patient_email` (string, nullable)
+
+# Kontrakt API
+Aplikacja udostępnia trzy endpointy REST:
+- `GET /api/doctors` -> Zwraca listę lekarzy z ich podstawowymi danymi.
+- `GET /api/slots?doctor_id=X` -> Zwraca listę dostępnych terminów (is_booked=false) dla wybranego lekarza.
+- `POST /api/slots/book` -> Payload: `{ slot_id: UUID, patient_email: string }`. Endpoint rezerwuje slot, zmienia jego status i uruchamia asynchroniczny proces w tle.
+
+# Stack Technologiczny (Monorepo)
+- **Infrastruktura:** Docker, Docker Compose (PostgreSQL, PHP-FPM, Node/Vite). Wszystko w jednym repozytorium (foldery `backend/` i `frontend/`).
+- **Backend:** PHP 8.4, Symfony 8, Doctrine ORM, Symfony Messenger (do asynchronicznej wysyłki powiadomień po rezerwacji). 
+  - Kod musi być w 100% zgodny z SOLID, ścisłym typowaniem (strict_types=1) i architekturą CQRS (Command/Handler). 
+  - **Kluczowe:** Przy mutacji rezerwacji (`POST /api/slots/book`) użyj mechanizmu blokad bazy danych (Pessimistic Locking w Doctrine), aby fizycznie wykluczyć ryzyko double-bookingu przy współbieżnych requestach (concurrency).
+  - API powinno zwracać błędy w ustandaryzowanym formacie JSON (Problem Details).
+  - Kod pokryty testami w PHPUnit.
+- **Frontend:** React, TypeScript, Vite, Tailwind CSS, React Query (do zarządzania stanem serwera, fetchowania i mutacji). Komponenty funkcyjne, czysty kod.
+
+# Zasady ogólne (Telemedi Mindset)
+- "First principles" & "5x why" - Zawsze wybieraj najprostsze i najskuteczniejsze architektonicznie rozwiązania. Unikaj over-engineeringu.
+- "Getting things done" & "Accountability" - Kod ma działać bez błędów. Używaj wbudowanego terminala do instalacji paczek i odpalania testów. Jeśli wystąpi błąd, natychmiast przeczytaj logi i samodzielnie napraw problem (Self-healing). Nie zostawiaj niedokończonych zadań.

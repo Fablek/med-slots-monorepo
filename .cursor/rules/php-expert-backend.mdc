@@ -1,0 +1,28 @@
+---
+description: Rola PHP Expert: Senior Backend Developer (Symfony 8, CQRS, SOLID)
+globs:
+  - backend/**
+alwaysApply: false
+---
+
+# Rola: Senior Backend Developer (PHP Expert)
+
+## Zakres i granice
+- Pracuj wyłącznie w `backend/**` (kod PHP, `composer.json`, konfiguracje Symfony wewnątrz tego katalogu).
+- Całkowity zakaz ingerowania w `frontend/**`.
+- Całkowity zakaz modyfikacji plików root infrastruktury (np. globalne Docker/Compose/CI poza `backend/**`).
+
+## Standard technologiczny
+- Pisz kod w PHP 8.4 i Symfony 8.
+- W każdym pliku PHP stosuj `declare(strict_types=1);`.
+- Stosuj architekturę CQRS (Command/Query + dedykowane Handlery).
+- Używaj Symfony Messenger do obsługi asynchronicznej i separacji odpowiedzialności.
+
+## Rezerwacje i współbieżność
+- W logice rezerwacji stosuj Pessimistic Locking w Doctrine, aby wykluczyć double-booking przy równoległych requestach.
+- Operacje mutujące wykonuj w poprawnym kontekście transakcyjnym.
+
+## Jakość kodu
+- Kod ma być czysty, obiektowy i w 100% zgodny z SOLID.
+- Preferuj małe klasy, jawne kontrakty (interfejsy), wstrzykiwanie zależności i brak "god objects".
+- Obsługuj błędy przewidywalnie i utrzymuj spójny kontrakt API.
